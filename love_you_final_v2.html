@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>love-you</title>
+<style>
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overflow:hidden}
+body{background:#050505;color:#fff;font-family:'Courier New',monospace}
+
+/* FIRST SCREEN */
+#screen1{position:fixed;inset:0;display:grid;place-items:center;background:#070707}
+.window{
+  width:min(700px,82vw);min-height:250px;background:#090909;
+  border:3px solid #eee;box-shadow:7px 7px 0 #777,0 0 30px rgba(255,255,255,.08)
+}
+.titlebar{height:40px;border-bottom:3px solid #eee;display:flex;align-items:center;padding-left:12px;gap:8px}
+.dot{width:9px;height:9px;border:2px solid #eee}
+.question{text-align:center;padding:50px 15px 32px}
+.question h1{
+  margin:0 0 32px;font-family:'Courier New',monospace;
+  font-size:clamp(24px,5vw,38px);font-weight:bold;color:#fff;
+  text-shadow:2px 2px 0 #444
+}
+.buttons{display:flex;justify-content:center;gap:38px}
+.btn{
+  min-width:110px;height:55px;background:#090909;color:#fff;
+  border:3px solid #eee;box-shadow:4px 4px 0 #777;
+  font:700 20px 'Courier New',monospace;cursor:pointer
+}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 #777}
+
+/* LOVE SCREEN */
+#screen2{display:none;position:fixed;inset:0;overflow:hidden;background:#050005}
+ .pattern-scroller{
+  position:absolute;inset:0;overflow:hidden;background:#050005
+}
+.pattern-track{
+  position:absolute;left:0;top:-100%;width:100%;height:200%;
+  animation:backgroundFall 12s linear infinite;will-change:transform
+}
+.pattern{
+  position:absolute;left:-25px;right:-25px;top:0;height:50%;
+  overflow:hidden;display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  grid-auto-rows:30px;align-content:start
+}
+#pattern2{top:50%}
+@keyframes backgroundFall{
+  from{transform:translateY(0)}
+  to{transform:translateY(50%)}
+}
+.pattern span{
+  color:#ff0088;font:700 18px/30px 'Courier New',monospace;
+  white-space:nowrap;text-shadow:0 0 3px #ff0088,0 0 9px #ff0088;opacity:.78
+}
+.pattern span:nth-child(2n){transform:translateX(-8px)}
+.pattern span:nth-child(3n){transform:translateX(6px)}
+
+.centerGlow{
+  position:absolute;left:50%;top:53%;width:min(70vw,540px);height:min(70vw,540px);
+  transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(255,0,130,.6),rgba(255,0,130,.2) 38%,transparent 72%);
+  filter:blur(14px);animation:glow 2s ease-in-out infinite alternate
+}
+@keyframes glow{from{opacity:.65;transform:translate(-50%,-50%) scale(.94)}to{opacity:1;transform:translate(-50%,-50%) scale(1.06)}}
+
+.love{
+  position:absolute;z-index:3;left:50%;top:40%;transform:translate(-50%,-50%);
+  color:#fff;font:900 clamp(26px,7vw,58px)/1 'Courier New',monospace;
+  white-space:nowrap;text-shadow:0 0 5px #fff,0 0 14px #ff0088,0 0 35px #ff0088;
+  animation:textPulse 1.5s ease-in-out infinite alternate
+}
+@keyframes textPulse{from{opacity:.82}to{opacity:1}}
+
+.heart{
+  position:absolute;z-index:3;left:50%;top:56%;
+  width:clamp(120px,29vw,205px);height:clamp(120px,29vw,205px);
+  transform:translate(-50%,-50%) rotate(-45deg);
+  background:#ff006a;border-radius:18px 0 18px 18px;
+  box-shadow:0 0 6px #ff006a,0 0 18px #ff006a,0 0 40px #ff0088,0 0 80px rgba(255,0,136,.95);
+  animation:heartBeat 1.15s ease-in-out infinite
+}
+.heart:before,.heart:after{
+  content:"";position:absolute;width:100%;height:100%;border-radius:50%;
+  background:#ff006a;box-shadow:inherit
+}
+.heart:before{top:-50%;left:0}.heart:after{top:0;left:50%}
+@keyframes heartBeat{
+  0%,100%{transform:translate(-50%,-50%) rotate(-45deg) scale(1)}
+  15%{transform:translate(-50%,-50%) rotate(-45deg) scale(1.1)}
+  30%{transform:translate(-50%,-50%) rotate(-45deg) scale(1)}
+}
+.flash{position:fixed;inset:0;background:#fff;z-index:10;pointer-events:none;opacity:0}
+.flash.on{animation:flash .5s ease-out}
+@keyframes flash{0%{opacity:.9}100%{opacity:0}}
+
+@media(max-width:600px){
+  .window{width:84vw;min-height:230px}
+  .titlebar{height:36px}
+  .question{padding:42px 8px 25px}
+  .question h1{font-size:21px;margin-bottom:30px}
+  .buttons{gap:25px}
+  .btn{min-width:92px;height:52px;font-size:17px}
+  .pattern{grid-template-columns:repeat(5,minmax(0,1fr));grid-auto-rows:28px;overflow:hidden}
+  .pattern span{font-size:15px;line-height:28px}
+  .love{top:41%;font-size:25px}
+  .heart{top:56%;width:clamp(110px,30vw,175px);height:clamp(110px,30vw,175px)}
+}
+</style>
+</head>
+<body>
+
+<div id="screen1">
+  <div class="window">
+    <div class="titlebar">
+      <i class="dot"></i><i class="dot"></i><i class="dot"></i>
+    </div>
+    <div class="question">
+      <h1>Do you love me?</h1>
+      <div class="buttons">
+        <button class="btn" id="yes">Yes</button>
+        <button class="btn" id="no">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="screen2">
+  <div class="pattern-scroller">
+    <div class="pattern-track">
+      <div class="pattern" id="pattern"></div>
+      <div class="pattern" id="pattern2"></div>
+    </div>
+  </div>
+  <div class="centerGlow"></div>
+  <div class="love">LOVE&nbsp;&nbsp;YOU</div>
+  <div class="heart">❤️</div>
+</div>
+
+<div class="flash" id="flash"></div>
+
+<script>
+const s1=document.getElementById('screen1');
+const s2=document.getElementById('screen2');
+const yes=document.getElementById('yes');
+const no=document.getElementById('no');
+const flash=document.getElementById('flash');
+const pattern=document.getElementById('pattern');
+const pattern2=document.getElementById('pattern2');
+
+/* Fill both screens identically. */
+for(const layer of [pattern,pattern2]){
+  for(let i=0;i<800;i++){
+    const x=document.createElement('span');
+    x.textContent='YOU LOVE';
+    layer.appendChild(x);
+  }
+}
+
+yes.onclick=()=>{
+  flash.classList.add('on');
+  setTimeout(()=>{
+    s1.style.display='none';
+    s2.style.display='block';
+  },160);
+  setTimeout(()=>flash.classList.remove('on'),550);
+};
+
+/* Each press of NO swaps the buttons. */
+let swapped=false;
+function swapButtons(){
+  swapped=!swapped;
+  const parent=yes.parentNode;
+  if(swapped) parent.insertBefore(no,yes);
+  else parent.insertBefore(yes,no);
+}
+no.addEventListener('click',swapButtons);
+no.addEventListener('touchstart',swapButtons,{passive:true});
+</script>
+</body>
+</html>
